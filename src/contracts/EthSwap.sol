@@ -7,6 +7,13 @@ contract EthSwap {
     Token public token;
     uint256 public rate = 100;
 
+    event TokenPurchased(
+        address account,
+        address token,
+        uint256 amount,
+        uint256 rate
+    );
+
     constructor(Token _token) public {
         token = _token;
     }
@@ -14,6 +21,14 @@ contract EthSwap {
     function buyTokens() public payable {
         // Calculate the number of tokens to buy
         uint256 tokenAmount = msg.value * rate;
+
+        // Require that EthSwap has enough tokens
+        require(token.balanceOf(address(this)) >= tokenAmount);
+
+        // Trasnfer tokens to the user
         token.transfer(msg.sender, tokenAmount);
+
+        // Emit an event
+        emit TokenPurchased(msg.sender, address(token), tokenAmount, rate);
     }
 }
