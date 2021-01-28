@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Web3 from "web3";
+import Navbar from "./Navbar";
 import "./App.css";
 
 class App extends Component {
@@ -13,7 +14,10 @@ class App extends Component {
 
     const accounts = await web3.eth.getAccounts();
     this.setState({ account: accounts[0] });
-    console.log(this.state.account);
+
+    const ethBalance = await web3.eth.getBalance(this.state.account);
+    this.setState({ ethBalance: ethBalance });
+    console.log(this.state.ethBalance);
   }
 
   async loadWeb3() {
@@ -33,22 +37,14 @@ class App extends Component {
     super(props);
     this.state = {
       account: "",
+      ethBalance: "0",
     };
   }
 
   render() {
     return (
       <div>
-        <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-          <a
-            className="navbar-brand col-sm-3 col-md-2 mr-0"
-            href="http://www.dappuniversity.com/bootcamp"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Dapp University
-          </a>
-        </nav>
+        <Navbar account={this.state.account} />
         <div className="container-fluid mt-5">
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
